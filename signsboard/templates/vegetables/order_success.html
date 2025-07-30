@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Placed Successfully - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 text-center">
+                <div class="card-body py-5">
+                    <div class="success-icon mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <h2 class="text-success mb-3">Order Placed Successfully!</h2>
+                    
+                    {% if order %}
+                        <div class="order-details mb-4">
+                            <h5>Order #{{ order.id }}</h5>
+                            <p class="text-muted">Your order has been confirmed and will be delivered soon.</p>
+                        </div>
+                        
+                        <div class="order-summary bg-light p-4 rounded mb-4">
+                            <h6 class="mb-3">Order Summary</h6>
+                            {% for item in order.items.all %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>{{ item.vegetable.name }} ({{ item.quantity }} {{ item.vegetable.unit }})</span>
+                                    <span>₹{{ item.total_price }}</span>
+                                </div>
+                            {% endfor %}
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total Amount</span>
+                                <span class="text-success">₹{{ order.total_amount }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="delivery-info mb-4">
+                            <h6>Delivery Information</h6>
+                            <p class="mb-1"><strong>Address:</strong> {{ order.delivery_address }}</p>
+                            <p class="mb-1"><strong>Phone:</strong> {{ order.phone }}</p>
+                            {% if order.delivery_slot %}
+                                <p class="mb-1"><strong>Time Slot:</strong> 
+                                    {{ order.delivery_slot.start_time|time:"g:i A" }} - 
+                                    {{ order.delivery_slot.end_time|time:"g:i A" }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="next-steps">
+                        <h6 class="mb-3">What's Next?</h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="step">
+                                    <i class="fas fa-box text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Order Processing</h6>
+                                    <p class="small text-muted">We're preparing your order</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="step">
+                                    <i class="fas fa-truck text-warning mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Out for Delivery</h6>
+                                    <p class="small text-muted">Your order is on the way</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="step">
+                                    <i class="fas fa-home text-success mb-2" style="font-size: 2rem;"></i>
+                                    <h6>Delivered</h6>
+                                    <p class="small text-muted">Fresh vegetables at your door</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons mt-4">
+                        <a href="{% url 'vegetables:list' %}" class="btn btn-success me-3">
+                            <i class="fas fa-shopping-bag"></i> Continue Shopping
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

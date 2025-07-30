@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-credit-card"></i> Checkout</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Delivery Information -->
+                        <div class="checkout-section mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-map-marker-alt"></i> Delivery Information
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="full_name" class="form-label">Full Name</label>
+                                    <input type="text" id="full_name" name="full_name" class="form-control" 
+                                           value="{{ user.get_full_name }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Delivery Address</label>
+                                <textarea id="address" name="address" class="form-control" rows="3" 
+                                          placeholder="Enter your complete delivery address" required></textarea>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" id="city" name="city" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="pincode" class="form-label">Pincode</label>
+                                    <input type="text" id="pincode" name="pincode" class="form-control" 
+                                           pattern="[0-9]{6}" maxlength="6" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Delivery Time Slot -->
+                        <div class="checkout-section mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-clock"></i> Delivery Time Slot
+                            </h5>
+                            
+                            {% if delivery_slots %}
+                                <div class="row">
+                                    {% for slot in delivery_slots %}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="delivery_slot" 
+                                                       value="{{ slot.id }}" 
+                                                       id="slot{{ slot.id }}"
+                                                       {% if forloop.first %}checked{% endif %}>
+                                                <label class="form-check-label" for="slot{{ slot.id }}">
+                                                    <strong>{{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        {% if slot.price_multiplier == 1 %}
+                                                            Free delivery
+                                                        {% else %}
+                                                            +₹{{ slot.extra_charge }} express charge
+                                                        {% endif %}
+                                                    </small>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    Standard delivery slot will be assigned automatically.
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Special Instructions -->
+                        <div class="checkout-section mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-comment"></i> Special Instructions
+                            </h5>
+                            <textarea name="special_instructions" class="form-control" rows="3" 
+                                      placeholder="Any special delivery instructions (optional)"></textarea>
+                        </div>
+                        
+                        <div class="checkout-actions">
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'vegetables:cart' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left"></i> Back to Cart
+                                </a>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-check"></i> Place Order
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Order Summary -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-receipt"></i> Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% if cart_items %}
+                        {% for item in cart_items %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="flex-grow-1">
+                                    <strong>{{ item.vegetable.name }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ item.quantity }} {{ item.vegetable.unit }} × ₹{{ item.vegetable.price_per_unit }}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <strong>₹{{ item.total_price }}</strong>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span>₹{{ subtotal }}</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Delivery Fee</span>
+                            <span class="text-success">Free</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2" id="express-charge" style="display: none;">
+                            <span>Express Delivery</span>
+                            <span id="express-amount">₹0</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total</span>
+                            <span class="text-success" id="total-amount">₹{{ total }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Payment Security -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-shield-alt"></i> Secure Payment</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <i class="fas fa-lock text-success"></i> 
+                        SSL Encrypted Transaction
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-credit-card text-primary"></i> 
+                        Multiple Payment Options
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-undo text-info"></i> 
+                        Easy Return Policy
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Delivery Promise -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-truck"></i> Our Promise</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <i class="fas fa-leaf text-success"></i> 
+                        Fresh & Quality Guaranteed
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-clock text-warning"></i> 
+                        On-Time Delivery
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-phone text-primary"></i> 
+                        24/7 Customer Support
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deliverySlots = document.querySelectorAll('input[name="delivery_slot"]');
+    const expressCharge = document.getElementById('express-charge');
+    const expressAmount = document.getElementById('express-amount');
+    const totalAmount = document.getElementById('total-amount');
+    const baseTotal = {{ total }};
+    
+    deliverySlots.forEach(slot => {
+        slot.addEventListener('change', function() {
+            const selectedOption = this.parentElement.querySelector('label small');
+            const chargeText = selectedOption.textContent;
+            
+            if (chargeText.includes('₹')) {
+                const charge = parseInt(chargeText.match(/₹(\d+)/)[1]);
+                expressCharge.style.display = 'flex';
+                expressAmount.textContent = '₹' + charge;
+                totalAmount.textContent = '₹' + (baseTotal + charge);
+            } else {
+                expressCharge.style.display = 'none';
+                totalAmount.textContent = '₹' + baseTotal;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

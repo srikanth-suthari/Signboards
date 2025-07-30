@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Please correct the errors below:</strong>
+                            <ul class="mb-0 mt-2">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_first_name" class="form-label">
+                                    <i class="fas fa-user"></i> First Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
+                                       id="id_first_name" 
+                                       name="first_name" 
+                                       value="{{ form.first_name.value|default_if_none:'' }}"
+                                       placeholder="Enter first name"
+                                       required>
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name" class="form-label">
+                                    <i class="fas fa-user"></i> Last Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
+                                       id="id_last_name" 
+                                       name="last_name" 
+                                       value="{{ form.last_name.value|default_if_none:'' }}"
+                                       placeholder="Enter last name"
+                                       required>
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">
+                                <i class="fas fa-at"></i> Username
+                            </label>
+                            <input type="text" 
+                                   class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                                   id="id_username" 
+                                   name="username" 
+                                   value="{{ form.username.value|default_if_none:'' }}"
+                                   placeholder="Choose a username"
+                                   required>
+                            <div class="form-text">Username must be unique and can contain letters, numbers, and @/./+/-/_ only.</div>
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <input type="email" 
+                                   class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                                   id="id_email" 
+                                   name="email" 
+                                   value="{{ form.email.value|default_if_none:'' }}"
+                                   placeholder="Enter your email"
+                                   required>
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.email.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
+                                       id="id_password1" 
+                                       name="password1"
+                                       placeholder="Create a password"
+                                       required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                <small>
+                                    • At least 8 characters<br>
+                                    • Cannot be entirely numeric<br>
+                                    • Cannot be too common
+                                </small>
+                            </div>
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password1.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password2" class="form-label">
+                                <i class="fas fa-lock"></i> Confirm Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
+                                       id="id_password2" 
+                                       name="password2"
+                                       placeholder="Confirm your password"
+                                       required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password2.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> 
+                                and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Already have an account? 
+                            <a href="{% url 'login' %}" class="text-decoration-none">
+                                <i class="fas fa-sign-in-alt"></i> Login here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    function setupPasswordToggle(toggleId, passwordId) {
+        const toggle = document.getElementById(toggleId);
+        const password = document.getElementById(passwordId);
+        
+        if (toggle && password) {
+            toggle.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                const icon = this.querySelector('i');
+                if (type === 'password') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+    }
+    
+    setupPasswordToggle('togglePassword1', 'id_password1');
+    setupPasswordToggle('togglePassword2', 'id_password2');
+    
+    // Password confirmation validation
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    
+    if (password1 && password2) {
+        password2.addEventListener('input', function() {
+            if (password1.value !== password2.value) {
+                password2.setCustomValidity('Passwords do not match');
+            } else {
+                password2.setCustomValidity('');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

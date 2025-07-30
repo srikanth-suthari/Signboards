@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Vehicle Booking - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Filter Sidebar -->
+            <div class="search-form">
+                <h5><i class="fas fa-filter"></i> Filter Vehicles</h5>
+                <form method="get" class="mb-3">
+                    <div class="mb-3">
+                        <select name="type" class="form-control">
+                            <option value="">All Types</option>
+                            {% for type in vehicle_types %}
+                                <option value="{{ type.id }}" 
+                                        {% if type.id == selected_type %}selected{% endif %}>
+                                    {{ type.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <select name="fuel" class="form-control">
+                            <option value="">All Fuel Types</option>
+                            {% for fuel_code, fuel_name in fuel_choices %}
+                                <option value="{{ fuel_code }}" 
+                                        {% if fuel_code == selected_fuel %}selected{% endif %}>
+                                    {{ fuel_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="ac" value="1" class="form-check-input" 
+                                   {% if ac_only %}checked{% endif %}>
+                            <label class="form-check-label">
+                                <i class="fas fa-snowflake text-info"></i> AC Only
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-car"></i> Available Vehicles</h2>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'vehicles:book' %}" class="btn btn-info">
+                        <i class="fas fa-plus"></i> Book Vehicle
+                    </a>
+                {% endif %}
+            </div>
+            
+            {% if vehicles %}
+                <div class="row">
+                    {% for vehicle in vehicles %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if vehicle.image %}
+                                    <img src="{{ vehicle.image.url }}" class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;" alt="{{ vehicle.make_model }}">
+                                {% else %}
+                                    <!-- Default vehicle images based on type -->
+                                    {% if vehicle.vehicle_type.name == "Car" %}
+                                        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Car">
+                                    {% elif vehicle.vehicle_type.name == "Bus" %}
+                                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Bus">
+                                    {% elif vehicle.vehicle_type.name == "Truck" %}
+                                        <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Truck">
+                                    {% elif vehicle.vehicle_type.name == "Bike" %}
+                                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Bike">
+                                    {% else %}
+                                        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Vehicle">
+                                    {% endif %}
+                                {% endif %}
+                                
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title">{{ vehicle.make_model }}</h5>
+                                        <span class="badge bg-primary">{{ vehicle.license_plate }}</span>
+                                    </div>
+                                    
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-tag"></i> {{ vehicle.vehicle_type.name }}
+                                    </p>
+                                    
+                                    <div class="vehicle-features mb-3">
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-users"></i> {{ vehicle.seating_capacity }} seats
+                                                </small>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-gas-pump"></i> {{ vehicle.get_fuel_type_display }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="row text-center mt-2">
+                                            <div class="col-6">
+                                                {% if vehicle.ac_available %}
+                                                    <small class="text-success">
+                                                        <i class="fas fa-snowflake"></i> AC Available
+                                                    </small>
+                                                {% else %}
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-times"></i> No AC
+                                                    </small>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-6">
+                                                {% if vehicle.gps_enabled %}
+                                                    <small class="text-success">
+                                                        <i class="fas fa-map-marker-alt"></i> GPS Enabled
+                                                    </small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="pricing mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="price">₹{{ vehicle.vehicle_type.base_rate_per_hour }}/hour</span>
+                                            <span class="price">₹{{ vehicle.vehicle_type.base_rate_per_km }}/km</span>
+                                        </div>
+                                    </div>
+                                    
+                                    {% if vehicle.current_location %}
+                                        <p class="text-muted small">
+                                            <i class="fas fa-map-marker-alt"></i> {{ vehicle.current_location }}
+                                        </p>
+                                    {% endif %}
+                                    
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'vehicles:book' %}?vehicle={{ vehicle.id }}" 
+                                           class="btn btn-info w-100">
+                                            <i class="fas fa-calendar-check"></i> Book This Vehicle
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'login' %}" class="btn btn-outline-info w-100">
+                                            Login to Book
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>No vehicles found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or browse all vehicle types.</p>
+                    <a href="{% url 'vehicles:list' %}" class="btn btn-info">
+                        View All Vehicles
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

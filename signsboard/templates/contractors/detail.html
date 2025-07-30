@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ contractor.name }} - Contractor Details{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2>{{ contractor.name }}</h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-tag"></i> {{ contractor.category.name }}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            {% if contractor.is_verified %}
+                                <span class="badge bg-success mb-2">
+                                    <i class="fas fa-check-circle"></i> Verified
+                                </span><br>
+                            {% endif %}
+                            {% if contractor.is_available %}
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-check"></i> Available
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-times"></i> Busy
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if contractor.profile_image %}
+                        <div class="text-center mb-4">
+                            <img src="{{ contractor.profile_image.url }}" 
+                                 class="img-thumbnail" 
+                                 style="max-width: 200px;" 
+                                 alt="{{ contractor.name }}">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="contractor-stats row mb-4">
+                        <div class="col-md-3 text-center">
+                            <div class="stat-item">
+                                <h4 class="text-primary">{{ contractor.experience_years }}</h4>
+                                <small class="text-muted">Years Experience</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-item">
+                                <div class="rating-display" data-rating="{{ contractor.rating }}"></div>
+                                <small class="text-muted">Rating</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-item">
+                                <h4 class="text-success">{{ contractor.total_projects }}</h4>
+                                <small class="text-muted">Projects Completed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="stat-item">
+                                <h4 class="text-warning">₹{{ contractor.hourly_rate }}</h4>
+                                <small class="text-muted">Per Hour</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="description mb-4">
+                        <h5><i class="fas fa-info-circle"></i> About</h5>
+                        <p>{{ contractor.description }}</p>
+                    </div>
+                    
+                    <div class="contact-info mb-4">
+                        <h5><i class="fas fa-address-card"></i> Contact Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><i class="fas fa-envelope text-primary"></i> {{ contractor.email }}</p>
+                                <p><i class="fas fa-phone text-success"></i> {{ contractor.phone }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><i class="fas fa-map-marker-alt text-danger"></i> {{ contractor.address }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if user.is_authenticated and contractor.is_available %}
+                        <div class="text-center">
+                            <a href="{% url 'contractors:book' contractor.id %}" 
+                               class="btn btn-primary btn-lg">
+                                <i class="fas fa-calendar-check"></i> Book {{ contractor.name }}
+                            </a>
+                        </div>
+                    {% elif not user.is_authenticated %}
+                        <div class="text-center">
+                            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                                Login to Book
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Category Info -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-info-circle"></i> {{ contractor.category.name }} Services</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ contractor.category.description }}</p>
+                    <a href="{% url 'contractors:by_category' contractor.category.id %}" 
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-users"></i> View All {{ contractor.category.name }} Contractors
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'contractors:book' contractor.id %}" 
+                           class="btn btn-success btn-sm w-100 mb-2">
+                            <i class="fas fa-calendar-plus"></i> Book Now
+                        </a>
+                        <a href="{% url 'contractors:my_bookings' %}" 
+                           class="btn btn-outline-success btn-sm w-100">
+                            <i class="fas fa-history"></i> My Bookings
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" 
+                           class="btn btn-success btn-sm w-100 mb-2">
+                            <i class="fas fa-sign-in-alt"></i> Login to Book
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Similar Contractors -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-users"></i> Similar Contractors</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Find other contractors in the same category</p>
+                    <a href="{% url 'contractors:by_category' contractor.category.id %}" 
+                       class="btn btn-outline-warning btn-sm w-100">
+                        <i class="fas fa-search"></i> Browse {{ contractor.category.name }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

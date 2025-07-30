@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Find Contractors - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Search & Filter Sidebar -->
+            <div class="search-form">
+                <h5><i class="fas fa-search"></i> Search Contractors</h5>
+                <form method="get" class="mb-3">
+                    <div class="mb-3">
+                        <input type="search" name="search" class="form-control" 
+                               placeholder="Search by name or skills..." 
+                               value="{{ search_query }}">
+                    </div>
+                    <div class="mb-3">
+                        <select name="category" class="form-control">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                        {% if category.id == selected_category %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-tools"></i> Available Contractors</h2>
+                <span class="text-muted">{{ contractors|length }} contractor{{ contractors|length|pluralize }} found</span>
+            </div>
+            
+            {% if contractors %}
+                <div class="row">
+                    {% for contractor in contractors %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="contractor-image">
+                                    {% if contractor.profile_image %}
+                                        <img src="{{ contractor.profile_image.url }}" 
+                                             class="card-img-top" 
+                                             alt="{{ contractor.name }}"
+                                             style="height: 200px; object-fit: cover;">
+                                    {% else %}
+                                        {% if contractor.category.name == "Plumber" %}
+                                            <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                                 class="card-img-top" 
+                                                 alt="Plumber"
+                                                 style="height: 200px; object-fit: cover;">
+                                        {% elif contractor.category.name == "Electrician" %}
+                                            <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                                 class="card-img-top" 
+                                                 alt="Electrician"
+                                                 style="height: 200px; object-fit: cover;">
+                                        {% else %}
+                                            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                                 class="card-img-top" 
+                                                 alt="Contractor"
+                                                 style="height: 200px; object-fit: cover;">
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="card-title">{{ contractor.name }}</h5>
+                                        {% if contractor.is_verified %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle"></i> Verified
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-tag"></i> {{ contractor.category.name }}
+                                    </p>
+                                    
+                                    <p class="card-text">{{ contractor.description|truncatewords:20 }}</p>
+                                    
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span><i class="fas fa-clock"></i> {{ contractor.experience_years }} years exp.</span>
+                                            <span class="rating-display" data-rating="{{ contractor.rating }}"></span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span><i class="fas fa-project-diagram"></i> {{ contractor.total_projects }} projects</span>
+                                            <span class="price">₹{{ contractor.hourly_rate }}/hour</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'contractors:detail' contractor.id %}" 
+                                           class="btn btn-outline-primary btn-sm flex-fill">
+                                            View Details
+                                        </a>
+                                        {% if user.is_authenticated %}
+                                            <a href="{% url 'contractors:book' contractor.id %}" 
+                                               class="btn btn-primary btn-sm flex-fill">
+                                                Book Now
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>No contractors found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or browse all categories.</p>
+                    <a href="{% url 'contractors:list' %}" class="btn btn-primary">
+                        View All Contractors
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

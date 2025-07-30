@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Signboard Gallery - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Filter Sidebar -->
+            <div class="search-form">
+                <h5><i class="fas fa-filter"></i> Filter Gallery</h5>
+                <form method="get" class="mb-3">
+                    <div class="mb-3">
+                        <select name="type" class="form-control">
+                            <option value="">All Types</option>
+                            {% for type in signboard_types %}
+                                <option value="{{ type.id }}" 
+                                        {% if type.id == selected_type %}selected{% endif %}>
+                                    {{ type.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">
+                        <i class="fas fa-filter"></i> Apply Filter
+                    </button>
+                </form>
+                
+                <div class="mt-4">
+                    <h6>Need a Custom Signboard?</h6>
+                    <p class="text-muted small">Get a personalized quote for your business.</p>
+                    <a href="{% url 'signboards:quote' %}" class="btn btn-primary btn-sm w-100">
+                        <i class="fas fa-quote-right"></i> Request Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-images"></i> Signboard Gallery</h2>
+                <span class="text-muted">{{ gallery_items|length }} signboard{{ gallery_items|length|pluralize }} in gallery</span>
+            </div>
+            
+            {% if gallery_items %}
+                <div class="gallery-grid">
+                    {% for item in gallery_items %}
+                        <div class="gallery-item card border-0 shadow-sm">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="card-img-top" 
+                                     alt="{{ item.title }}" style="height: 250px; object-fit: cover;">
+                            {% else %}
+                                <!-- Default signboard images based on type -->
+                                {% if "acp" in item.signboard_type.name.lower %}
+                                    <img src="https://images.unsplash.com/photo-1556035511-3168381ea4d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                         class="card-img-top" style="height: 250px; object-fit: cover;" alt="ACP Signboard">
+                                {% elif "led" in item.signboard_type.name.lower %}
+                                    <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                         class="card-img-top" style="height: 250px; object-fit: cover;" alt="LED Signboard">
+                                {% elif "neon" in item.signboard_type.name.lower %}
+                                    <img src="https://images.unsplash.com/photo-1518709779329-5926bfaa99a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                         class="card-img-top" style="height: 250px; object-fit: cover;" alt="Neon Signboard">
+                                {% else %}
+                                    <img src="https://images.unsplash.com/photo-1577017040065-650ee4d43339?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                         class="card-img-top" style="height: 250px; object-fit: cover;" alt="Custom Signboard">
+                                {% endif %}
+                            {% endif %}
+                            
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="card-title">{{ item.title }}</h6>
+                                    {% if item.is_featured %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-star"></i> Featured
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-tag"></i> {{ item.signboard_type.name }}
+                                </p>
+                                
+                                {% if item.description %}
+                                    <p class="card-text small">{{ item.description|truncatewords:15 }}</p>
+                                {% endif %}
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <small class="text-muted">{{ item.signboard_type.material }}</small>
+                                    <span class="price">₹{{ item.signboard_type.price_per_sqft }}/sq ft</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Call to Action -->
+                <div class="text-center mt-5 py-4">
+                    <h4>Inspired by Our Work?</h4>
+                    <p class="text-muted">Get your custom signboard designed and manufactured by our experts.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'signboards:quote' %}" class="btn btn-warning btn-lg">
+                            <i class="fas fa-quote-right"></i> Get Free Quote
+                        </a>
+                        <a href="{% url 'signboards:types' %}" class="btn btn-outline-warning btn-lg">
+                            <i class="fas fa-info-circle"></i> View Types
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-images fa-3x text-muted mb-3"></i>
+                    <h4>No gallery items found</h4>
+                    <p class="text-muted">
+                        {% if selected_type %}
+                            No signboards found for the selected type. Try viewing all types.
+                        {% else %}
+                            Our gallery is being updated. Check back soon or request a custom quote.
+                        {% endif %}
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        {% if selected_type %}
+                            <a href="{% url 'signboards:gallery' %}" class="btn btn-warning">
+                                View All Gallery
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'signboards:quote' %}" class="btn btn-primary">
+                            Request Custom Quote
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Gallery Modal for Image Preview -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Signboard Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="modalImage" class="img-fluid" alt="Signboard Preview">
+                <div id="modalInfo" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Image click handler for modal preview
+    const galleryImages = document.querySelectorAll('.gallery-item img');
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    const modalImage = document.getElementById('modalImage');
+    const modalInfo = document.getElementById('modalInfo');
+    const modalTitle = document.querySelector('#imageModal .modal-title');
+    
+    galleryImages.forEach(img => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function() {
+            const card = this.closest('.gallery-item');
+            const title = card.querySelector('.card-title').textContent;
+            const type = card.querySelector('.text-muted').textContent;
+            const description = card.querySelector('.card-text');
+            
+            modalImage.src = this.src;
+            modalImage.alt = this.alt;
+            modalTitle.textContent = title;
+            
+            modalInfo.innerHTML = `
+                <h6>${title}</h6>
+                <p class="text-muted">${type}</p>
+                ${description ? `<p>${description.textContent}</p>` : ''}
+            `;
+            
+            modal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

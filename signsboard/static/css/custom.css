@@ -1,0 +1,216 @@
+/* Custom Styles for Urban Services Website */
+
+/* Hero Section */
+.hero-section {
+    min-height: 60vh;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+/* Service Cards */
+.service-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+.service-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.service-image img {
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-image img {
+    transform: scale(1.1);
+}
+
+/* Image Overlays */
+.service-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.1), transparent);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.service-card:hover .service-image::after {
+    opacity: 1;
+}
+
+/* Contractor Cards */
+.contractor-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.contractor-image img {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .contractor-image img {
+    transform: scale(1.05);
+}
+
+/* Vehicle Cards */
+.vehicle-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.vehicle-image img {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .vehicle-image img {
+    transform: scale(1.05);
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.gallery-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+}
+
+.gallery-item img {
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Vegetable Cards */
+.vegetable-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.vegetable-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+/* Image Lazy Loading Effect */
+.card-img-top {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    border-radius: 15px 15px 0 0;
+}
+
+/* Responsive Image Adjustments */
+@media (max-width: 768px) {
+    .service-card .card-img-top,
+    .contractor-image img,
+    .vegetable-card .card-img-top,
+    .gallery-item img {
+        height: 150px !important;
+    }
+    
+    .hero-section {
+        min-height: 50vh;
+    }
+    
+    .min-vh-75 {
+        min-height: 60vh;
+    }
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.loading-placeholder {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced Buttons */
+.btn {
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Enhanced Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Price Display */
+.price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Badge Styling */
+.badge {
+    border-radius: 15px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Navigation Enhancement */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Form Styling */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}

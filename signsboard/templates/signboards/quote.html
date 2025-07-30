@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Request Signboard Quote - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-warning text-dark text-center py-4">
+                    <h2><i class="fas fa-quote-right"></i> Request Signboard Quote</h2>
+                    <p class="mb-0">Get instant pricing for your custom signboard</p>
+                </div>
+                
+                <div class="card-body p-5">
+                    <form method="post" enctype="multipart/form-data" id="price-calculator">
+                        {% csrf_token %}
+                        
+                        <!-- Business Information -->
+                        <div class="section-header mb-4">
+                            <h4><i class="fas fa-building"></i> Business Information</h4>
+                            <hr>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.business_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.contact_phone|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <!-- Signboard Specifications -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4><i class="fas fa-ruler-combined"></i> Signboard Specifications</h4>
+                            <hr>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                {{ form.signboard_type|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.size|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.finish|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.urgency|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Price Display -->
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-calculator"></i> Estimated Price</h6>
+                                        <div id="price-display" class="text-center">
+                                            <p class="text-muted">Select specifications to see pricing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Design Details -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4><i class="fas fa-palette"></i> Design Details</h4>
+                            <hr>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.text_content|as_crispy_field }}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.font_preferences|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.color_preferences|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.logo_upload|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.design_file|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.special_requirements|as_crispy_field }}
+                        </div>
+                        
+                        <!-- Installation Details -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4><i class="fas fa-tools"></i> Installation Details</h4>
+                            <hr>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.installation_required }}
+                                <label class="form-check-label" for="{{ form.installation_required.id_for_label }}">
+                                    <i class="fas fa-wrench"></i> Professional installation required
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="installation-fields">
+                            <div class="mb-3">
+                                {{ form.installation_address|as_crispy_field }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.preferred_installation_date|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-warning btn-lg px-5">
+                                <i class="fas fa-paper-plane"></i> Submit Quote Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Sidebar -->
+        <div class="col-lg-4">
+            <!-- Contact Information -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-phone"></i> Contact Akshikha Signs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="contact-item mb-3">
+                        <h6><i class="fas fa-phone text-primary"></i> Call Us</h6>
+                        <p class="mb-1"><a href="tel:9000666803" class="text-decoration-none">9000666803</a></p>
+                        <small class="text-muted">Available 9 AM - 7 PM</small>
+                    </div>
+                    
+                    <div class="contact-item mb-3">
+                        <h6><i class="fas fa-envelope text-success"></i> Email</h6>
+                        <p class="mb-1"><a href="mailto:akshikhasignshyd@gmail.com" class="text-decoration-none">akshikhasignshyd@gmail.com</a></p>
+                        <small class="text-muted">Quick response guaranteed</small>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h6><i class="fas fa-map-marker-alt text-warning"></i> Location</h6>
+                        <p class="mb-1">Mallapur, Hyderabad</p>
+                        <small class="text-muted">Visit our workshop</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm border-0 mt-4 mt-lg-0">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-info-circle"></i> Quote Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-item mb-3">
+                        <h6><i class="fas fa-clock text-success"></i> Response Time</h6>
+                        <p class="text-muted small">You'll receive your detailed quote within 2-4 hours during business hours.</p>
+                    </div>
+                    
+                    <div class="info-item mb-3">
+                        <h6><i class="fas fa-shield-alt text-primary"></i> Quality Guarantee</h6>
+                        <p class="text-muted small">All our signboards come with a 2-year warranty and quality assurance.</p>
+                    </div>
+                    
+                    <div class="info-item mb-3">
+                        <h6><i class="fas fa-tools text-warning"></i> Installation</h6>
+                        <p class="text-muted small">Professional installation with proper mounting and electrical work included.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h6><i class="fas fa-headset text-info"></i> Support</h6>
+                        <p class="text-muted small">24/7 customer support for any queries or assistance needed.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sample Gallery -->
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5><i class="fas fa-images"></i> Sample Work</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Check out our recent signboard installations</p>
+                    <a href="{% url 'signboards:gallery' %}" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="fas fa-external-link-alt"></i> View Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle installation fields based on checkbox
+    const installationRequired = document.getElementById('{{ form.installation_required.id_for_label }}');
+    const installationFields = document.getElementById('installation-fields');
+    
+    function toggleInstallationFields() {
+        if (installationRequired.checked) {
+            installationFields.style.display = 'block';
+        } else {
+            installationFields.style.display = 'none';
+        }
+    }
+    
+    if (installationRequired) {
+        installationRequired.addEventListener('change', toggleInstallationFields);
+        toggleInstallationFields(); // Initial check
+    }
+    
+    // Form validation
+    const form = document.getElementById('price-calculator');
+    form.addEventListener('submit', function(e) {
+        const businessName = document.getElementById('{{ form.business_name.id_for_label }}');
+        const textContent = document.getElementById('{{ form.text_content.id_for_label }}');
+        
+        if (!businessName.value.trim()) {
+            e.preventDefault();
+            alert('Please enter your business name.');
+            businessName.focus();
+            return;
+        }
+        
+        if (!textContent.value.trim()) {
+            e.preventDefault();
+            alert('Please enter the text content for your signboard.');
+            textContent.focus();
+            return;
+        }
+    });
+});
+</script>
+{% endblock %}

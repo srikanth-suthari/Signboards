@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fresh Vegetables - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- Search & Filter Sidebar -->
+            <div class="search-form">
+                <h5><i class="fas fa-filter"></i> Filter Vegetables</h5>
+                <form method="get" class="mb-3">
+                    <div class="mb-3">
+                        <input type="search" name="search" class="form-control" 
+                               placeholder="Search vegetables..." 
+                               value="{{ search_query }}">
+                    </div>
+                    <div class="mb-3">
+                        <select name="category" class="form-control">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                        {% if category.id == selected_category %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="organic" value="1" class="form-check-input" 
+                                   {% if organic_only %}checked{% endif %}>
+                            <label class="form-check-label">
+                                <i class="fas fa-leaf text-success"></i> Organic Only
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-carrot"></i> Fresh Vegetables</h2>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'vegetables:cart' %}" class="btn btn-success">
+                        <i class="fas fa-shopping-cart"></i> View Cart
+                    </a>
+                {% endif %}
+            </div>
+            
+            {% if vegetables %}
+                <div class="row">
+                    {% for vegetable in vegetables %}
+                        <div class="col-md-4 col-sm-6 mb-4">
+                            <div class="card h-100">
+                                {% if vegetable.image %}
+                                    <img src="{{ vegetable.image.url }}" class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;" alt="{{ vegetable.name }}">
+                                {% else %}
+                                    <!-- Default vegetable images based on common names -->
+                                    {% if "tomato" in vegetable.name.lower %}
+                                        <img src="https://images.unsplash.com/photo-1546470427-e26264be0b0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Tomatoes">
+                                    {% elif "onion" in vegetable.name.lower %}
+                                        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Onions">
+                                    {% elif "potato" in vegetable.name.lower %}
+                                        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Potatoes">
+                                    {% elif "carrot" in vegetable.name.lower %}
+                                        <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Carrots">
+                                    {% elif "green" in vegetable.name.lower or "leafy" in vegetable.name.lower or "spinach" in vegetable.name.lower %}
+                                        <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Leafy Greens">
+                                    {% else %}
+                                        <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                             class="card-img-top" style="height: 200px; object-fit: cover;" alt="Fresh Vegetables">
+                                    {% endif %}
+                                {% endif %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title">{{ vegetable.name }}</h6>
+                                        {% if vegetable.is_organic %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-leaf"></i> Organic
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <p class="text-muted small mb-2">{{ vegetable.category.name }}</p>
+                                    
+                                    {% if vegetable.description %}
+                                        <p class="card-text small">{{ vegetable.description|truncatewords:10 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="mt-auto">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="price">₹{{ vegetable.price_per_unit }}/{{ vegetable.unit }}</span>
+                                            <span class="text-muted small">
+                                                Stock: {{ vegetable.stock_quantity }} {{ vegetable.unit }}
+                                            </span>
+                                        </div>
+                                        
+                                        {% if user.is_authenticated %}
+                                            <form method="post" action="{% url 'vegetables:add_to_cart' vegetable.id %}">
+                                                {% csrf_token %}
+                                                <div class="input-group mb-2">
+                                                    <input type="number" name="quantity" class="form-control form-control-sm" 
+                                                           value="1" min="0.1" step="0.1" max="{{ vegetable.stock_quantity }}">
+                                                    <span class="input-group-text">{{ vegetable.unit }}</span>
+                                                </div>
+                                                <button type="submit" class="btn btn-success btn-sm w-100"
+                                                        {% if vegetable.stock_quantity == 0 %}disabled{% endif %}>
+                                                    {% if vegetable.stock_quantity == 0 %}
+                                                        <i class="fas fa-times"></i> Out of Stock
+                                                    {% else %}
+                                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                                    {% endif %}
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm w-100">
+                                                Login to Buy
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>No vegetables found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or browse all categories.</p>
+                    <a href="{% url 'vegetables:list' %}" class="btn btn-success">
+                        View All Vegetables
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

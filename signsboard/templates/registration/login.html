@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Urban Services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <i class="fas fa-info-circle"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input type="text" 
+                                   class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                                   id="{{ form.username.id_for_label }}" 
+                                   name="{{ form.username.name }}" 
+                                   value="{{ form.username.value|default_if_none:'' }}"
+                                   placeholder="Enter your username"
+                                   required>
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
+                                       id="{{ form.password.id_for_label }}" 
+                                       name="{{ form.password.name }}"
+                                       placeholder="Enter your password"
+                                       required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </div>
+
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-2">
+                            <a href="{% url 'password_reset' %}" class="text-decoration-none">
+                                <i class="fas fa-key"></i> Forgot your password?
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            Don't have an account? 
+                            <a href="{% url 'signup' %}" class="text-decoration-none">
+                                <i class="fas fa-user-plus"></i> Sign up here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-3">Why Create an Account?</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <i class="fas fa-shopping-cart text-success mb-2"></i>
+                            <p class="small mb-0">Save Cart Items</p>
+                        </div>
+                        <div class="col-6">
+                            <i class="fas fa-history text-primary mb-2"></i>
+                            <p class="small mb-0">Order History</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <i class="fas fa-star text-warning mb-2"></i>
+                            <p class="small mb-0">Rate & Review</p>
+                        </div>
+                        <div class="col-6">
+                            <i class="fas fa-bell text-info mb-2"></i>
+                            <p class="small mb-0">Get Updates</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('{{ form.password.id_for_label }}');
+    
+    if (togglePassword && passwordField) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            const icon = this.querySelector('i');
+            if (type === 'password') {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

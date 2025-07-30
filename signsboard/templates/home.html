@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Urban Services - Your City Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative text-white py-5" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80') center/cover;">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Your Urban Service Partner
+                </h1>
+                <p class="lead mb-4">
+                    From finding skilled contractors to fresh vegetable delivery, custom signboards to vehicle rentals - 
+                    we bring all essential urban services to your doorstep.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'contractors:list' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tools"></i> Find Contractors
+                    </a>
+                    <a href="{% url 'vegetables:list' %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-shopping-cart"></i> Order Vegetables
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="Urban Services"
+                         style="max-height: 400px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Our Services</h2>
+            <p class="lead text-muted">Comprehensive urban solutions for modern living</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Contractors Service -->
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card card h-100 border-0 shadow-sm">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             class="card-img-top" 
+                             alt="Professional Contractors"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <div class="service-icon mb-3">
+                            <i class="fas fa-tools fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Skilled Contractors</h5>
+                        <p class="card-text">
+                            Find verified contractors for plumbing, electrical work, carpentry, 
+                            painting, and more. Quality work guaranteed.
+                        </p>
+                        <a href="{% url 'contractors:list' %}" class="btn btn-primary">
+                            Browse Contractors
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vegetables Service -->
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card card h-100 border-0 shadow-sm">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             class="card-img-top" 
+                             alt="Fresh Vegetables"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <div class="service-icon mb-3">
+                            <i class="fas fa-carrot fa-2x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Fresh Vegetables</h5>
+                        <p class="card-text">
+                            Get farm-fresh vegetables delivered to your doorstep. 
+                            Organic options available with same-day delivery.
+                        </p>
+                        <a href="{% url 'vegetables:list' %}" class="btn btn-success">
+                            Shop Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Signboards Service -->
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card card h-100 border-0 shadow-sm">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1577017040065-650ee4d43339?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             class="card-img-top" 
+                             alt="Professional Signboards"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <div class="service-icon mb-3">
+                            <i class="fas fa-sign fa-2x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">ACP Signboards</h5>
+                        <p class="card-text">
+                            Custom signboards for your business. ACP, acrylic, and LED options 
+                            with professional design and installation.
+                        </p>
+                        <a href="{% url 'signboards:home' %}" class="btn btn-warning">
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vehicles Service -->
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card card h-100 border-0 shadow-sm">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             class="card-img-top" 
+                             alt="Vehicle Rental Services"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <div class="service-icon mb-3">
+                            <i class="fas fa-car fa-2x text-info"></i>
+                        </div>
+                        <h5 class="card-title">Vehicle Booking</h5>
+                        <p class="card-text">
+                            Rent cars, bikes, and commercial vehicles. Hourly, daily, 
+                            or long-term rentals with professional drivers.
+                        </p>
+                        <a href="{% url 'vehicles:list' %}" class="btn btn-info">
+                            Book Vehicle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold mb-4">Why Choose Urban Services?</h2>
+                <div class="features-list">
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h5>Verified Professionals</h5>
+                            <p class="text-muted">All our service providers are background verified and highly rated.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-clock fa-2x text-success"></i>
+                        </div>
+                        <div>
+                            <h5>Quick Service</h5>
+                            <p class="text-muted">Fast response times and efficient service delivery guaranteed.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-star fa-2x text-warning"></i>
+                        </div>
+                        <div>
+                            <h5>Quality Assured</h5>
+                            <p class="text-muted">100% satisfaction guarantee with quality service standards.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-headset fa-2x text-info"></i>
+                        </div>
+                        <div>
+                            <h5>24/7 Support</h5>
+                            <p class="text-muted">Round-the-clock customer support for all your queries.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="stats-grid">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="stat-card card text-center p-3">
+                                <h3 class="text-primary">500+</h3>
+                                <p class="mb-0">Verified Contractors</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card card text-center p-3">
+                                <h3 class="text-success">1000+</h3>
+                                <p class="mb-0">Happy Customers</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card card text-center p-3">
+                                <h3 class="text-warning">98%</h3>
+                                <p class="mb-0">Success Rate</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card card text-center p-3">
+                                <h3 class="text-info">24h</h3>
+                                <p class="mb-0">Average Response</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-6 fw-bold mb-4">Get In Touch</h2>
+                <p class="lead mb-5">Have questions? Need a custom quote? We're here to help!</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon mb-3">
+                        <i class="fas fa-phone fa-3x text-primary"></i>
+                    </div>
+                    <h5>Call Us</h5>
+                    <p class="text-muted mb-2">Ready to help you</p>
+                    <a href="tel:9000666803" class="btn btn-outline-primary">
+                        <i class="fas fa-phone"></i> 9000666803
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon mb-3">
+                        <i class="fas fa-envelope fa-3x text-success"></i>
+                    </div>
+                    <h5>Email Us</h5>
+                    <p class="text-muted mb-2">Quick response guaranteed</p>
+                    <a href="mailto:akshikhasignshyd@gmail.com" class="btn btn-outline-success">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="contact-icon mb-3">
+                        <i class="fas fa-map-marker-alt fa-3x text-warning"></i>
+                    </div>
+                    <h5>Visit Us</h5>
+                    <p class="text-muted mb-2">Mallapur, Hyderabad</p>
+                    <a href="https://maps.google.com/?q=Mallapur,Hyderabad" target="_blank" class="btn btn-outline-warning">
+                        <i class="fas fa-map-marker-alt"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section bg-primary text-white py-5">
+    <div class="container text-center">
+        <h2 class="display-6 fw-bold mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of satisfied customers who trust Urban Services for their daily needs.</p>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-user-plus"></i> Sign Up Today
+        </a>
+        {% else %}
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'contractors:list' %}" class="btn btn-light">Find Contractors</a>
+            <a href="{% url 'vegetables:list' %}" class="btn btn-outline-light">Order Vegetables</a>
+            <a href="{% url 'signboards:quote' %}" class="btn btn-outline-light">Get Signboard Quote</a>
+            <a href="{% url 'vehicles:book' %}" class="btn btn-outline-light">Book Vehicle</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

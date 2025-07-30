@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Signboard Services - Urban Services{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-warning text-dark py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Professional Signboard Solutions
+                </h1>
+                <p class="lead mb-4">
+                    Custom ACP signboards, LED displays, and premium business signs. 
+                    Quality manufacturing with professional installation services.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'signboards:quote' %}" class="btn btn-dark btn-lg">
+                        <i class="fas fa-quote-right"></i> Get Free Quote
+                    </a>
+                    <a href="{% url 'signboards:gallery' %}" class="btn btn-outline-dark btn-lg">
+                        <i class="fas fa-images"></i> View Gallery
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-sign display-1 text-dark opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Our Signboard Types</h2>
+            <p class="lead text-muted">Choose from our premium range of signboard materials and styles</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for type in signboard_types %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            {% if type.image %}
+                                <img src="{{ type.image.url }}" class="img-fluid mb-3" 
+                                     style="height: 150px; object-fit: cover;" alt="{{ type.name }}">
+                            {% else %}
+                                <div class="service-icon mb-3">
+                                    <i class="fas fa-sign fa-3x text-warning"></i>
+                                </div>
+                            {% endif %}
+                            <h5 class="card-title">{{ type.name }}</h5>
+                            <p class="text-muted">{{ type.material }}</p>
+                            <p class="card-text">{{ type.description|default:"Premium quality signboard solution for your business." }}</p>
+                            <div class="price mb-3">₹{{ type.price_per_sqft }}/sq ft</div>
+                            <a href="{% url 'signboards:quote' %}?type={{ type.id }}" class="btn btn-warning">
+                                Get Quote
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Gallery -->
+{% if featured_gallery %}
+<section class="gallery-section bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Featured Work</h2>
+            <p class="lead text-muted">Some of our recent signboard installations</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for item in featured_gallery %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="gallery-item card border-0 shadow-sm">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top" 
+                                 style="height: 200px; object-fit: cover;" alt="{{ item.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="card-title">{{ item.title }}</h6>
+                            <p class="text-muted small">{{ item.signboard_type.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'signboards:gallery' %}" class="btn btn-warning btn-lg">
+                <i class="fas fa-images"></i> View Full Gallery
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold mb-4">Why Choose Our Signboards?</h2>
+                <div class="features-list">
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-award fa-2x text-warning"></i>
+                        </div>
+                        <div>
+                            <h5>Premium Materials</h5>
+                            <p class="text-muted">High-quality ACP, acrylic, LED, and metal materials for durability.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-palette fa-2x text-success"></i>
+                        </div>
+                        <div>
+                            <h5>Custom Design</h5>
+                            <p class="text-muted">Personalized designs with your brand colors, fonts, and logo.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex mb-3">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-tools fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h5>Professional Installation</h5>
+                            <p class="text-muted">Expert installation services with proper mounting and wiring.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item d-flex">
+                        <div class="feature-icon me-3">
+                            <i class="fas fa-clock fa-2x text-info"></i>
+                        </div>
+                        <div>
+                            <h5>Quick Turnaround</h5>
+                            <p class="text-muted">Fast production and delivery options for urgent requirements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="process-steps">
+                    <h4 class="mb-4">Our Process</h4>
+                    <div class="step d-flex mb-3">
+                        <div class="step-number">1</div>
+                        <div class="ms-3">
+                            <h6>Request Quote</h6>
+                            <p class="text-muted small">Submit your requirements and get instant pricing</p>
+                        </div>
+                    </div>
+                    <div class="step d-flex mb-3">
+                        <div class="step-number">2</div>
+                        <div class="ms-3">
+                            <h6>Design Approval</h6>
+                            <p class="text-muted small">Review and approve the custom design</p>
+                        </div>
+                    </div>
+                    <div class="step d-flex mb-3">
+                        <div class="step-number">3</div>
+                        <div class="ms-3">
+                            <h6>Manufacturing</h6>
+                            <p class="text-muted small">Professional production using quality materials</p>
+                        </div>
+                    </div>
+                    <div class="step d-flex">
+                        <div class="step-number">4</div>
+                        <div class="ms-3">
+                            <h6>Installation</h6>
+                            <p class="text-muted small">Expert installation at your location</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section bg-warning text-dark py-5">
+    <div class="container text-center">
+        <h2 class="display-6 fw-bold mb-4">Ready to Create Your Signboard?</h2>
+        <p class="lead mb-4">Get a free quote today and make your business stand out!</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'signboards:quote' %}" class="btn btn-dark btn-lg">
+                <i class="fas fa-quote-right"></i> Get Free Quote
+            </a>
+            <a href="{% url 'signboards:gallery' %}" class="btn btn-outline-dark btn-lg">
+                <i class="fas fa-images"></i> Browse Gallery
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
